@@ -20,7 +20,7 @@ module.exports = function (grunt) {
         app: 'app',
         dist: 'dist',
         siteURL: 'localhost',
-        devURL: 'localhost',
+        devURL: '0.0.0.0',
         devPort: 8080
     };
 
