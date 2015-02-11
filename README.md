@@ -11,7 +11,7 @@ While you could just run this code on your current LAMP set up, Vagrant gives yo
 
 The following steps are for setting up the server using Vagrant.
 
-- Install <a href="https://www.vagrantup.com" target="_blank">Vagrant</a> and <a href="https://virtualbox.org" target="_blank">VirtualBox</a>
+- Install <a href="https://www.vagrantup.com" target="_blank">Vagrant</a> and <a href="https://www.virtualbox.org" target="_blank">VirtualBox</a>
 - Navigate to the web folder under the HackU3 directory.
 - Run the command `vagrant up` to start the virtual machine.
 - Once the process finishes, enter `vagrant ssh` to ssh into the virtual machine.
