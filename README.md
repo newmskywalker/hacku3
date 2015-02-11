@@ -5,13 +5,13 @@
 - Clone the fork to your local environment. `git clone https://github.com/YOUR_USERNAME/hacku3.git`
 
 ### LAMP Environment
-The suggested way to run the server is to use <a href="https://vagrantup.com" target="_blank">Vagrant</a>.
+The suggested way to run the server is to use <a href="https://www.vagrantup.com" target="_blank">Vagrant</a>.
 
 While you could just run this code on your current LAMP set up, Vagrant gives you all the dependencies out of the box and ensures that everyone is using the same environment.
 
 The following steps are for setting up the server using Vagrant.
 
-- Install <a href="https://vagrantup.com" target="_blank">Vagrant</a> and <a href="https://virtualbox.org" target="_blank">VirtualBox</a>
+- Install <a href="https://www.vagrantup.com" target="_blank">Vagrant</a> and <a href="https://virtualbox.org" target="_blank">VirtualBox</a>
 - Navigate to the web folder under the HackU3 directory.
 - Run the command `vagrant up` to start the virtual machine.
 - Once the process finishes, enter `vagrant ssh` to ssh into the virtual machine.
