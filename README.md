@@ -1,7 +1,7 @@
 # HackU 3 ODU Team
 ## Getting Started.
 <a href="" target="_blank"></a>
-- <a href="https://github.com/YOUR_USERNAME/hacku3/fork" target="_blank">Fork this repo.</a>
+- <a href="https://github.com/j-mateo/hacku3/fork" target="_blank">Fork this repo.</a>
 - Clone the fork to your local environment. `git clone https://github.com/YOUR_USERNAME/hacku3.git`
 
 ### LAMP Environment
