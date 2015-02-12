@@ -3,73 +3,109 @@ package com.mateoj.hacku3;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mateoj.hacku3.models.Category;
+import com.mateoj.hacku3.models.Topic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by jose on 2/9/15.
  */
 public class MainActivity extends ActionBarActivity {
-    private List<Category> allCategories = new ArrayList<>();
-    private List<Category> selectedCategories = new ArrayList<>();
-    private SimpleAdapter simpleAdapter;
+    private List<Topic> allCategories = new ArrayList<>();
+    private List<Topic> selectedCategories = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        ListView listView = (ListView) findViewById(R.id.categoriesList);
-
-//        apiService.getCategories(new Callback<List<Category>>() {
-//            @Override
-//            public void success(List<Category> categories, Response response) {
-//                if( simpleAdapter != null)
-//
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//
-//            }
-//        });
-        final ArrayList<HashMap<String, String>> hashList = new ArrayList<>();
-        HashMap<String, String> hashItem;
-        for(int i = 0; i < 20; i++){
-            Category category = new Category();
-            category.setId(i);
-            category.setName("Cateogry " + i);
-            allCategories.add(category);
-            hashItem = new HashMap<>();
-            hashItem.put("line1", category.getName());
-            hashList.add(hashItem);
-        }
-
-        simpleAdapter = new SimpleAdapter(this, hashList, android.R.layout.simple_list_item_1, new String[]{"line1"}, new int[]{android.R.id.text1});
-        listView.setAdapter(simpleAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.categoriesList);
+        final TopicsAdapter topicsAdapter = new TopicsAdapter();
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(topicsAdapter);
+        IntervuService.getInstance().getCategories(new Callback<List<Topic>>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this, QuestionActivity.class).putExtra("categoryId", allCategories.get(position).getId()));
+            public void success(List<Topic> categories, Response response) {
+                allCategories = categories;
+                topicsAdapter.setItems(categories);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
             }
         });
-
-
     }
 
+    public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder> {
+        private List<Topic> items = new ArrayList<>();
+
+        public TopicsAdapter() {
+            for(int i = 0; i < 20; i++) {
+                Topic topic = new Topic();
+                topic.setName("Topic " + i);
+                topic.setId(i);
+                items.add(topic);
+            }
+        }
+
+        public void setItems(List<Topic> theItems) {
+            this.items = theItems;
+            notifyDataSetChanged();
+        }
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public TextView name;
+            public ViewHolder(View itemView) {
+                super(itemView);
+                   name = (TextView) itemView.findViewById(R.id.categoryText);
+            }
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_row, parent, false);
+            final ViewHolder viewHolder = new ViewHolder(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Topic topic = allCategories.get(viewHolder.getPosition());
+                    Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
+                    intent.putExtra("categoryId", topic.getId());
+                    intent.putExtra("categoryName", topic.getName());
+                    startActivity(intent);
+                }
+            });
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+           Topic topic = items.get(position);
+           holder.name.setText(topic.getName());
+        }
+
+        @Override
+        public int getItemCount() {
+            return (items == null) ? 0 : items.size();
+        }
+    }
 
     @Override
     protected void onResume() {

@@ -9,12 +9,10 @@ import java.util.List;
 public class Question {
 
     private int id;
-    private String content;
-    private Video videoAnswer;
-    private Category category;
-    private long timeElapsed;
-    private long answeredDate;
-    private User user;
+    private String question;
+    private int rating;
+    private  int status;
+    private int topicId;
 
     private static List<Question> questionsList;
 
@@ -56,111 +54,40 @@ public class Question {
         this.id = id;
     }
 
+
     /**
-     * Sets new answeredDate.
+     * Gets topicId.
      *
-     * @param answeredDate New value of answeredDate.
+     * @return Value of topicId.
      */
-    public void setAnsweredDate(long answeredDate) {
-        this.answeredDate = answeredDate;
+    public int getTopicId() {
+        return topicId;
     }
 
     /**
-     * Gets timeElapsed.
+     * Sets new question.
      *
-     * @return Value of timeElapsed.
+     * @param question New value of question.
      */
-    public long getTimeElapsed() {
-        return timeElapsed;
+    public void setQuestion(String question) {
+        this.question = question;
     }
 
     /**
-     * Gets answeredDate.
+     * Sets new topicId.
      *
-     * @return Value of answeredDate.
+     * @param topicId New value of topicId.
      */
-    public long getAnsweredDate() {
-        return answeredDate;
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
     }
 
     /**
-     * Sets new videoAnswer.
+     * Gets question.
      *
-     * @param videoAnswer New value of videoAnswer.
+     * @return Value of question.
      */
-    public void setVideoAnswer(Video videoAnswer) {
-        this.videoAnswer = videoAnswer;
-    }
-
-    /**
-     * Gets videoAnswer.
-     *
-     * @return Value of videoAnswer.
-     */
-    public Video getVideoAnswer() {
-        return videoAnswer;
-    }
-
-    /**
-     * Gets category.
-     *
-     * @return Value of category.
-     */
-    public Category getCategory() {
-        return category;
-    }
-
-    /**
-     * Sets new content.
-     *
-     * @param content New value of content.
-     */
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    /**
-     * Sets new timeElapsed.
-     *
-     * @param timeElapsed New value of timeElapsed.
-     */
-    public void setTimeElapsed(long timeElapsed) {
-        this.timeElapsed = timeElapsed;
-    }
-
-    /**
-     * Sets new category.
-     *
-     * @param category New value of category.
-     */
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    /**
-     * Gets content.
-     *
-     * @return Value of content.
-     */
-    public String getContent() {
-        return content;
-    }
-
-    /**
-     * Gets user.
-     *
-     * @return Value of user.
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * Sets new user.
-     *
-     * @param user New value of user.
-     */
-    public void setUser(User user) {
-        this.user = user;
+    public String getQuestion() {
+        return question;
     }
 }

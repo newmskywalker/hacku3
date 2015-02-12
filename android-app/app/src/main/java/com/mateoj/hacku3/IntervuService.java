@@ -17,7 +17,7 @@ public class IntervuService {
     public static APIService getInstance() {
         if( instance == null ) {
                     RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://mateoj.com/endpoint")
+                .setEndpoint("http://mateoj.com/hacku3/")
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         instance = restAdapter.create(APIService.class);
