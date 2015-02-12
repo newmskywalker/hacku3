@@ -5,14 +5,14 @@ package com.mateoj.hacku3.models;
  */
 public class Category {
     private String name;
-    private String id;
+    private int id;
 
     /**
      * Gets id.
      *
      * @return Value of id.
      */
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -39,7 +39,7 @@ public class Category {
      *
      * @param id New value of id.
      */
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 }
