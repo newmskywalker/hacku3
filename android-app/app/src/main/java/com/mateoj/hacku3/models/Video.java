@@ -6,3 +6,5 @@ package com.mateoj.hacku3.models;
 public class Video {
     private String localUri;
 }
+
+
