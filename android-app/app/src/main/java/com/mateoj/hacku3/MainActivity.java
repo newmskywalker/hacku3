@@ -1,9 +1,12 @@
 package com.mateoj.hacku3;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -30,11 +33,7 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
         ListView listView = (ListView) findViewById(R.id.categoriesList);
-//        RestAdapter restAdapter = new RestAdapter.Builder()
-//                .setEndpoint("http://mateoj.com/endpoint")
-//                .setLogLevel(RestAdapter.LogLevel.FULL)
-//                .build();
-//        APIService apiService = restAdapter.create(APIService.class);
+
 //        apiService.getCategories(new Callback<List<Category>>() {
 //            @Override
 //            public void success(List<Category> categories, Response response) {
@@ -61,7 +60,13 @@ public class MainActivity extends ActionBarActivity {
 
         simpleAdapter = new SimpleAdapter(this, hashList, android.R.layout.simple_list_item_1, new String[]{"line1"}, new int[]{android.R.id.text1});
         listView.setAdapter(simpleAdapter);
-     
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(MainActivity.this, QuestionActivity.class).putExtra("categoryId", allCategories.get(position).getId()));
+            }
+        });
+
 
     }
 
