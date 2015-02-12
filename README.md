@@ -16,6 +16,8 @@ The following steps are for setting up the server using Vagrant.
 - Run the command `vagrant up` to start the virtual machine.
 - Once the process finishes, enter `vagrant ssh` to ssh into the virtual machine.
 - Enter `cd /vagrant` to switch the the working directory.
+- Install dependencies by running:
+`sudo npm install && sudo bower install --allow-root`
 - Run `grunt server` to start the development server.
 - On your host machine, point your browser to <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> and you should see a welcome page.
 
