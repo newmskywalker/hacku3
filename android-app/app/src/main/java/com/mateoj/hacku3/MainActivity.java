@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Created by jose on 2/9/15.
  */
@@ -26,6 +28,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    @DebugLog
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
