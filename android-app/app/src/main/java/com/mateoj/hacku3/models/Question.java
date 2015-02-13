@@ -13,8 +13,11 @@ public class Question {
     private int rating;
     private  int status;
     private int topicId;
+    private Video video;
 
     private static List<Question> questionsList;
+
+
 
     /**
      * Sets new questionsList.
@@ -89,5 +92,23 @@ public class Question {
      */
     public String getQuestion() {
         return question;
+    }
+
+    /**
+     * Gets video.
+     *
+     * @return Value of video.
+     */
+    public Video getVideo() {
+        return video;
+    }
+
+    /**
+     * Sets new video.
+     *
+     * @param video New value of video.
+     */
+    public void setVideo(Video video) {
+        this.video = video;
     }
 }
