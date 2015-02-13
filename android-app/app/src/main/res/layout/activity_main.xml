@@ -15,4 +15,6 @@
         android:layout_alignParentLeft="true"
         android:id="@+id/categoriesList"/>
 
+
+
 </RelativeLayout>
