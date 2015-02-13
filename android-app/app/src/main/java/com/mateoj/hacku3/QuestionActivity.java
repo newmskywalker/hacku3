@@ -14,11 +14,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.mateoj.hacku3.models.Question;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -196,8 +203,37 @@ public class QuestionActivity extends ActionBarActivity {
         if( requestCode == CAPTURE_VIDEO_ACTIVITY_RESULT) {
             if( resultCode == RESULT_OK) {
                 videoView.setVideoURI(data.getData());
-                
+
                 videoView.getDuration();
+                String newVoiceMessageRecording = data.getData().toString();
+                File inputFile = new File(data.getDataString());
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(inputFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ByteArrayOutputStream bos= new ByteArrayOutputStream();
+                byte[] buf = new byte[(int)inputFile.length()];
+                try{
+                    assert fis != null;
+
+                        for (int readNum; (readNum=fis.read(buf)) != -1;){
+                            bos.write(buf,0,readNum);
+                        }
+
+                }
+                catch (IOException ex) {
+                    ex.printStackTrace();
+                    Toast.makeText(QuestionActivity.this,
+                            "Error conerting into byte: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                byte[] bytes = bos.toByteArray();
+/*upload into Parse*/
+                ParseFile voiceFile = new ParseFile ("video.mp4", bytes);
+                ParseObject voiceObj = new ParseObject ("VoiceObject");
+                voiceObj.put("voiceFile", voiceFile);
+                voiceObj.saveInBackground();
             }
         }
     }

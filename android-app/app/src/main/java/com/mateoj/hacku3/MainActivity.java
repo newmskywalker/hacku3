@@ -3,6 +3,7 @@ package com.mateoj.hacku3;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,21 +80,63 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
+        private void fade(View outgoing, View incoming) {
+            AlphaAnimation fadeOut = new AlphaAnimation(1, 0);
+            AlphaAnimation fadeIn = new AlphaAnimation(0, 1);
+            fadeIn.setDuration(500);
+            fadeOut.setDuration(500);
+            outgoing.setAnimation(fadeOut);
+            incoming.setAnimation(fadeIn);
+            outgoing.setVisibility(View.INVISIBLE);
+            incoming.setVisibility(View.VISIBLE);
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_row, parent, false);
+            final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_row, parent, false);
             final ViewHolder viewHolder = new ViewHolder(view);
-            view.setOnClickListener(new View.OnClickListener() {
+            final CardView topicSelection = (CardView) view.findViewById(R.id.topicSelection);
+            topicSelection.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Topic topic = allCategories.get(viewHolder.getPosition());
-                    Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
-                    intent.putExtra("categoryId", topic.getId());
-                    intent.putExtra("categoryName", topic.getName());
-                    startActivity(intent);
+                    final CardView modeSelection = (CardView) view.findViewById(R.id.modeSelection);
+                    fade(topicSelection, modeSelection);
+                    modeSelection.findViewById(R.id.dismissModeSelection).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fade(modeSelection, topicSelection);
+                        }
+                    });
+                    modeSelection.findViewById(R.id.assessmentButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fade(modeSelection, topicSelection);
+                            startQuestions(QuestionActivity.Mode.Assesment, items.get(viewHolder.getPosition()));
+                        }
+                    });
+                    modeSelection.findViewById(R.id.practiceButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fade(modeSelection, topicSelection);
+                            startQuestions(QuestionActivity.Mode.Practice, items.get(viewHolder.getPosition()));
+                        }
+                    });
+//                    Topic topic = allCategories.get(viewHolder.getPosition());
+//                    Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
+//                    intent.putExtra("categoryId", topic.getId());
+//                    intent.putExtra("categoryName", topic.getName());
+//                    startActivity(intent);
                 }
             });
             return viewHolder;
+        }
+
+        private void startQuestions(QuestionActivity.Mode mode, Topic topic) {
+            Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
+            intent.putExtra("categoryId", topic.getId());
+            intent.putExtra("categoryName", topic.getName());
+            intent.putExtra("mode", mode.toString());
+            startActivity(intent);
         }
 
         @Override
