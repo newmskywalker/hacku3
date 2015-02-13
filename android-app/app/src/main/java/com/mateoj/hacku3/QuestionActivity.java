@@ -144,6 +144,7 @@ public class QuestionActivity extends ActionBarActivity {
         if (isRecording) {
             // stop recording and release camera
             mMediaRecorder.stop();  // stop the recording
+
             releaseMediaRecorder(); // release the MediaRecorder object
             mCamera.lock();         // take camera access back from MediaRecorder
 
@@ -155,6 +156,7 @@ public class QuestionActivity extends ActionBarActivity {
             if (prepareVideoRecorder()) {
                 // Camera is available and unlocked, MediaRecorder is prepared,
                 // now you can start recording
+                mMediaRecorder.setOutputFile(getOutputMediaFileUri(MEDIA_TYPE_VIDEO).toString());
                 mMediaRecorder.start();
 
                 // inform the user that recording has started
@@ -179,7 +181,7 @@ public class QuestionActivity extends ActionBarActivity {
         // using Environment.getExternalStorageState() before doing this.
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+                Environment.DIRECTORY_DCIM), "EnterVu");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
@@ -211,8 +213,6 @@ public class QuestionActivity extends ActionBarActivity {
     private static Uri getOutputMediaFileUri(int type){
         return Uri.fromFile(getOutputMediaFile(type));
     }
-
-
 
     private void setQuestion(Question question) {
         questionDescription.setText(question.getQuestion());
@@ -308,7 +308,7 @@ public class QuestionActivity extends ActionBarActivity {
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
         // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
-        mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
+        mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_QVGA));
 
         // Step 4: Set output file
         mMediaRecorder.setOutputFile(getOutputMediaFile(MEDIA_TYPE_VIDEO).toString());
