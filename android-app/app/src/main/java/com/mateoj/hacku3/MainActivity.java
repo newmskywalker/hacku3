@@ -111,14 +111,18 @@ public class MainActivity extends ActionBarActivity {
                         @Override
                         public void onClick(View v) {
                             fade(modeSelection, topicSelection);
-                            startQuestions(QuestionActivity.Mode.Assesment, items.get(viewHolder.getPosition()));
+                            Assessment.getCurrentAssessment().setCurrentMode(Assessment.Mode.ForReals);
+                            Assessment.getCurrentAssessment().setTopic(items.get(viewHolder.getPosition()));
+                            startAssessment();
                         }
                     });
                     modeSelection.findViewById(R.id.practiceButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             fade(modeSelection, topicSelection);
-                            startQuestions(QuestionActivity.Mode.Practice, items.get(viewHolder.getPosition()));
+                            Assessment.getCurrentAssessment().setCurrentMode(Assessment.Mode.Practice);
+                            Assessment.getCurrentAssessment().setTopic(items.get(viewHolder.getPosition()));
+                            startAssessment();
                         }
                     });
 //                    Topic topic = allCategories.get(viewHolder.getPosition());
@@ -131,11 +135,8 @@ public class MainActivity extends ActionBarActivity {
             return viewHolder;
         }
 
-        private void startQuestions(QuestionActivity.Mode mode, Topic topic) {
+        private void startAssessment() {
             Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
-            intent.putExtra("categoryId", topic.getId());
-            intent.putExtra("categoryName", topic.getName());
-            intent.putExtra("mode", mode.toString());
             startActivity(intent);
         }
 
