@@ -1,12 +1,10 @@
 <ScrollView
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:background="@android:color/black"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:layout_height="fill_parent">
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +21,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Jose Mateo"
             android:id="@+id/textView2"
-            android:textColor="@color/white"
             android:layout_below="@+id/textView3"
             android:layout_centerHorizontal="true" />
         <EditText
@@ -32,7 +29,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Lucien Frelin"
             android:id="@+id/textView3"
-            android:textColor="@color/white"
             android:layout_below="@+id/textView10"
             android:layout_centerHorizontal="true" />
         <EditText
@@ -41,7 +37,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Krishna Ranga"
             android:id="@+id/textView4"
-            android:textColor="@color/white"
             android:layout_below="@+id/textView2"
             android:layout_centerHorizontal="true" />
         <EditText
@@ -50,7 +45,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Christopher Bliss "
             android:id="@+id/textView5"
-            android:textColor="@color/white"
             android:layout_below="@+id/textView"
             android:layout_centerHorizontal="true" />
         <EditText
@@ -59,7 +53,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Phillip Eldridge "
             android:id="@+id/textView6"
-            android:textColor="@color/white"
             android:layout_below="@+id/textView7"
             android:layout_centerHorizontal="true" />
         <EditText
@@ -68,7 +61,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="James Dailey"
             android:id="@+id/textView7"
-            android:textColor="@color/white"
             android:layout_below="@+id/textView5"
             android:layout_centerHorizontal="true" />
         <EditText
@@ -77,7 +69,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Eli Steele"
             android:id="@+id/textView8"
-            android:textColor="@color/white"
             android:layout_below="@+id/textView6"
             android:layout_centerHorizontal="true" />
         <EditText
@@ -86,7 +77,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Ashley Williams"
             android:id="@+id/textView9"
-            android:textColor="@color/white"
             android:layout_below="@+id/textView8"
             android:layout_centerHorizontal="true" />
 
@@ -106,6 +96,8 @@
             android:text="Continue"
             android:id="@+id/button"
             android:layout_below="@+id/textView4"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:onClick="sendMessage"/>
+
     </RelativeLayout>
 </ScrollView>

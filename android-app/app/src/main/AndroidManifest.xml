@@ -51,7 +51,8 @@
         <activity
             android:name=".TeamMemberActivity"
             android:label="TeamMemberActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar">
         </activity>
     </application>
 
