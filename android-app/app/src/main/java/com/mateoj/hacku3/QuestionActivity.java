@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -40,7 +39,7 @@ public class QuestionActivity extends ActionBarActivity {
     private static int CAPTURE_VIDEO_ACTIVITY_RESULT = 200;
     private int currentQuestionIndex = 0;
     private TextView questionDescription;
-    private Button recordButton;
+    private TextView recordButton;
     private VideoView videoView;
     private Camera mCamera;
     private CameraPreview cameraPreview;
@@ -55,13 +54,18 @@ public class QuestionActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+        mCamera = getCameraInstance();
+        cameraPreview = new CameraPreview(this, mCamera);
+        FrameLayout preview = (FrameLayout) findViewById(R.id.videoPreview);
+        preview.addView(cameraPreview);
 
+        mMediaRecorder = new MediaRecorder();
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("Loading...");
         progressDialog.show();
         questionDescription = (TextView) findViewById(R.id.questionDescription);
-        recordButton = (Button) findViewById(R.id.recordButton);
+        recordButton = (TextView) findViewById(R.id.recordButton);
         videoView = (VideoView) findViewById(R.id.answerVideo);
         countDown = (TextView) findViewById(R.id.countDown);
         MediaController mediaController = new MediaController(this);
@@ -70,6 +74,7 @@ public class QuestionActivity extends ActionBarActivity {
         if( Assessment.getCurrentAssessment().getTopic() == null) {
             throw new IllegalStateException("The topic has not been set");
         }
+
 
 //        mCamera = getCameraInstance();
 //        if( mCamera != null) {
@@ -221,7 +226,7 @@ public class QuestionActivity extends ActionBarActivity {
             }
 
             public void onFinish() {
-                countDown.setText("Out of time!");
+                countDown.setText("Recording...");
                 startRecording();
             }
         }.start();
@@ -293,15 +298,6 @@ public class QuestionActivity extends ActionBarActivity {
     }
 
     private boolean prepareVideoRecorder(){
-
-        mCamera = getCameraInstance();
-        if( mCamera == null)
-            return false;
-        cameraPreview = new CameraPreview(this, mCamera);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.videoPreview);
-        preview.addView(cameraPreview);
-
-        mMediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
