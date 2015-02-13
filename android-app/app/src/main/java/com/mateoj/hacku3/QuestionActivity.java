@@ -1,30 +1,29 @@
 package com.mateoj.hacku3;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.mateoj.hacku3.models.Question;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,46 +36,47 @@ import retrofit.client.Response;
 
 
 public class QuestionActivity extends ActionBarActivity {
-    private int topicId;
     private List<Question> questionList = new ArrayList<>();
     private static int CAPTURE_VIDEO_ACTIVITY_RESULT = 200;
     private int currentQuestionIndex = 0;
     private TextView questionDescription;
-    private Button practiceButton;
-    private Button assesmentButton;
     private Button recordButton;
     private VideoView videoView;
-    private Mode currentMode;
-    private Camera camera;
+    private Camera mCamera;
     private CameraPreview cameraPreview;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    private TextView countDown;
+    ProgressDialog progressDialog;
+    MediaRecorder mMediaRecorder;
+    private boolean isRecording = false;
 
-    public enum Mode{
-        Assesment,
-        Practice
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Loading...");
+        progressDialog.show();
         questionDescription = (TextView) findViewById(R.id.questionDescription);
-        practiceButton = (Button) findViewById(R.id.practiceButton);
         recordButton = (Button) findViewById(R.id.recordButton);
         videoView = (VideoView) findViewById(R.id.answerVideo);
+        countDown = (TextView) findViewById(R.id.countDown);
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
+        if( Assessment.getCurrentAssessment().getTopic() == null) {
+            throw new IllegalStateException("The topic has not been set");
+        }
 
-//        camera = getCameraInstance();
-//        if( camera != null) {
-//            cameraPreview = new CameraPreview(this, camera);
+//        mCamera = getCameraInstance();
+//        if( mCamera != null) {
+//            cameraPreview = new CameraPreview(this, mCamera);
 //            FrameLayout previewLayout = (FrameLayout) findViewById(R.id.videoPreview);
 //            previewLayout.addView(cameraPreview);
 //        }
-
-        if( getIntent().hasExtra("categoryId"))
-            topicId = getIntent().getIntExtra("categoryId", 0);
 
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,19 +84,26 @@ public class QuestionActivity extends ActionBarActivity {
                 startRecording();
             }
         });
-        practiceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                beginPractice();
-            }
-        });
 
+        if( Assessment.getCurrentAssessment().currentMode == null)
+            Assessment.getCurrentAssessment().currentMode = Assessment.Mode.Practice;
 
-        IntervuService.getInstance().getQuestions("getallquestions", topicId, new Callback<List<Question>>() {
+        IntervuService.getInstance().getQuestions("getallquestions", Assessment.getCurrentAssessment().getTopic().getId(), new Callback<List<Question>>() {
             @Override
             public void success(List<Question> questions, Response response) {
                 questionList = questions;
                 Log.d("Questions", questions.toString());
+                progressDialog.dismiss();
+                findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if( Assessment.getCurrentAssessment().currentMode == Assessment.Mode.Practice)
+                            beginPractice();
+                        else if( Assessment.getCurrentAssessment().currentMode == Assessment.Mode.ForReals)
+                            beginAssessment();
+                    }
+                });
             }
 
             @Override
@@ -126,18 +133,39 @@ public class QuestionActivity extends ActionBarActivity {
         return cam;
     }
     private void startRecording(){
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, .4);
-        startActivityForResult(intent, CAPTURE_VIDEO_ACTIVITY_RESULT);
-//        camera.unlock();
-//        MediaRecorder mediaRecorder = new MediaRecorder();
-//        mediaRecorder.setCamera(camera);
-//        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
-//        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-//        mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_LOW));
-//        mediaRecorder.setOutputFile(getOutputMediaFile(MEDIA_TYPE_VIDEO).toString());
-        //mediaRecorder.setPreviewDisplay(cameraPreview);
+//        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+//        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, .4);
+//        startActivityForResult(intent, CAPTURE_VIDEO_ACTIVITY_RESULT);
+        if (isRecording) {
+            // stop recording and release camera
+            mMediaRecorder.stop();  // stop the recording
+            releaseMediaRecorder(); // release the MediaRecorder object
+            mCamera.lock();         // take camera access back from MediaRecorder
 
+            // inform the user that recording has stopped
+            setCaptureButtonText("Capture");
+            isRecording = false;
+        } else {
+            // initialize video camera
+            if (prepareVideoRecorder()) {
+                // Camera is available and unlocked, MediaRecorder is prepared,
+                // now you can start recording
+                mMediaRecorder.start();
+
+                // inform the user that recording has started
+                setCaptureButtonText("Stop");
+                isRecording = true;
+            } else {
+                // prepare didn't work, release the camera
+                releaseMediaRecorder();
+                // inform user
+            }
+        }
+
+    }
+
+    private void setCaptureButtonText(String text) {
+        recordButton.setText(text);
     }
 
     /** Create a File for saving an image or video */
@@ -183,18 +211,30 @@ public class QuestionActivity extends ActionBarActivity {
 
     private void setQuestion(Question question) {
         questionDescription.setText(question.getQuestion());
+        new CountDownTimer(15 * 1000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                countDown.setText("" + millisUntilFinished / 1000);
+                if( millisUntilFinished / 1000 <= 5){
+                    countDown.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                }
+            }
+
+            public void onFinish() {
+                countDown.setText("Out of time!");
+                startRecording();
+            }
+        }.start();
 
     }
 
     private void beginPractice() {
         begin();
-        currentMode = Mode.Practice;
         setCurrentQuestionIndex(0);
     }
 
     private void beginAssessment() {
         begin();
-        currentMode = Mode.Assesment;
         setCurrentQuestionIndex(0);
     }
 
@@ -205,41 +245,12 @@ public class QuestionActivity extends ActionBarActivity {
                 videoView.setVideoURI(data.getData());
 
                 videoView.getDuration();
-                String newVoiceMessageRecording = data.getData().toString();
-                File inputFile = new File(data.getDataString());
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(inputFile);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                ByteArrayOutputStream bos= new ByteArrayOutputStream();
-                byte[] buf = new byte[(int)inputFile.length()];
-                try{
-                    assert fis != null;
-
-                        for (int readNum; (readNum=fis.read(buf)) != -1;){
-                            bos.write(buf,0,readNum);
-                        }
-
-                }
-                catch (IOException ex) {
-                    ex.printStackTrace();
-                    Toast.makeText(QuestionActivity.this,
-                            "Error conerting into byte: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                byte[] bytes = bos.toByteArray();
-/*upload into Parse*/
-                ParseFile voiceFile = new ParseFile ("video.mp4", bytes);
-                ParseObject voiceObj = new ParseObject ("VoiceObject");
-                voiceObj.put("voiceFile", voiceFile);
-                voiceObj.saveInBackground();
             }
         }
     }
 
     private void begin(){
-        findViewById(R.id.modeButtons).setVisibility(View.GONE);
+        findViewById(R.id.readyInfo).setVisibility(View.INVISIBLE);
         findViewById(R.id.questionInfo).setVisibility(View.VISIBLE);
     }
 
@@ -270,4 +281,80 @@ public class QuestionActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    /** Check if this device has a camera */
+    private boolean checkCameraHardware() {
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+            // this device has a camera
+            return true;
+        } else {
+            // no camera on this device
+            return false;
+        }
+    }
+
+    private boolean prepareVideoRecorder(){
+
+        mCamera = getCameraInstance();
+        if( mCamera == null)
+            return false;
+        cameraPreview = new CameraPreview(this, mCamera);
+        FrameLayout preview = (FrameLayout) findViewById(R.id.videoPreview);
+        preview.addView(cameraPreview);
+
+        mMediaRecorder = new MediaRecorder();
+
+        // Step 1: Unlock and set camera to MediaRecorder
+        mCamera.unlock();
+        mMediaRecorder.setCamera(mCamera);
+
+        // Step 2: Set sources
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+
+        // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
+        mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
+
+        // Step 4: Set output file
+        mMediaRecorder.setOutputFile(getOutputMediaFile(MEDIA_TYPE_VIDEO).toString());
+
+        // Step 5: Set the preview output
+        mMediaRecorder.setPreviewDisplay(cameraPreview.getHolder().getSurface());
+
+        // Step 6: Prepare configured MediaRecorder
+        try {
+            mMediaRecorder.prepare();
+        } catch (IllegalStateException e) {
+            Log.d("Camera", "IllegalStateException preparing MediaRecorder: " + e.getMessage());
+            releaseMediaRecorder();
+            return false;
+        } catch (IOException e) {
+            Log.d("Camera", "IOException preparing MediaRecorder: " + e.getMessage());
+            releaseMediaRecorder();
+            return false;
+        }
+        return true;
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        releaseMediaRecorder();       // if you are using MediaRecorder, release it first
+        releaseCamera();              // release the camera immediately on pause event
+    }
+
+    private void releaseMediaRecorder(){
+        if (mMediaRecorder != null) {
+            mMediaRecorder.reset();   // clear recorder configuration
+            mMediaRecorder.release(); // release the recorder object
+            mMediaRecorder = null;
+            mCamera.lock();           // lock camera for later use
+        }
+    }
+
+    private void releaseCamera(){
+        if (mCamera != null){
+            mCamera.release();        // release the camera for other applications
+            mCamera = null;
+        }
+    }
+
 }

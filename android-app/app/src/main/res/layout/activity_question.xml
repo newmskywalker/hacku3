@@ -29,6 +29,12 @@
             android:id="@+id/videoPreview"
             android:layout_weight="1"
             android:layout_height="0dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="50dp"
+            android:id="@+id/countDown"
+            android:textColor="@android:color/holo_green_dark"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,20 +43,21 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/modeButtons"
-        android:gravity="center"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/readyInfo"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/theme_default_primary"
+            android:textSize="50dp"
+            android:text="READY?"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Practice"
-            android:id="@+id/practiceButton"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Assessment"
-            android:id="@+id/assessmentButton"/>
-    </LinearLayout>
+            android:id="@+id/startButton"
+            android:text="Start"/>
+        </LinearLayout>
 
 </RelativeLayout>
