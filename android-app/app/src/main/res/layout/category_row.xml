@@ -18,9 +18,10 @@
         android:gravity="center"
         android:id="@+id/categoryText"
         android:textStyle="bold"
-        android:typeface="serif"
-        android:textSize="36sp"
-        />
+        android:typeface="sans"
+        android:textSize="36sp"/>
+        //android:clickable="true"
+        //android:onClick="catalogueClicker"/>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

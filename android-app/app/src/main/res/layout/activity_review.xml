@@ -12,7 +12,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Practice"
+        android:text="Review Video"
         android:id="@+id/reviewVideo"/>
     <TextView
         android:layout_width="match_parent"
@@ -25,12 +25,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
-        <VideoView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/videoReview"
-            android:layout_gravity="center_horizontal" />
-        <MediaController
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/videoReview"
+        android:layout_gravity="center_horizontal" />
+    <MediaController
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/mediaController"
