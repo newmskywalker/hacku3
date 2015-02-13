@@ -3,59 +3,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:droidicon="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_alignParentTop="true"
-              android:id="@+id/topicSelection"
-              android:padding="@dimen/activity_vertical_margin"
-              android:layout_height="200dp">
-    <TextView
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="@dimen/activity_vertical_margin"
-        tools:text="General Interview"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:layout_gravity="center"
-        android:id="@+id/categoryText"/>
-</android.support.v7.widget.CardView>
-<android.support.v7.widget.CardView
-    android:layout_width="match_parent"
-    android:padding="@dimen/activity_vertical_margin"
-    android:layout_height="200dp"
-    android:id="@+id/modeSelection"
-    android:layout_alignParentTop="true"
-    android:visibility="gone">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:id="@+id/dismissModeSelection"
-            android:src="@android:drawable/ic_delete"/>
+        android:layout_alignParentTop="true"
+        android:id="@+id/topicSelection"
+        android:padding="@dimen/activity_vertical_margin"
+        android:layout_height="200dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/practiceButton"
             android:gravity="center"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            tools:text="General Interview"
             android:textAppearance="?android:textAppearanceMedium"
             android:layout_gravity="center"
-            android:text="Practice"/>
-        <TextView
+            android:id="@+id/categoryText"/>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:padding="@dimen/activity_vertical_margin"
+        android:layout_height="200dp"
+        android:id="@+id/modeSelection"
+        android:layout_alignParentTop="true"
+        android:visibility="gone">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/assessmentButton"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:orientation="vertical"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Assessment"/>
+            android:layout_height="wrap_content">
+            <com.thedazzler.droidicon.badges.DroidiconBadge
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                droidicon:db_icon_color="@color/twitter_blue"
+                droidicon:db_icon="fa-undo"
+                android:layout_gravity="right"
+                android:id="@+id/dismissModeSelection"
+                android:src="@android:drawable/ic_delete"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/practiceButton"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:layout_gravity="center"
+                android:text="Practice"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/assessmentButton"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Assessment"/>
+
         </LinearLayout>
 
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>
