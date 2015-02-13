@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mateoj.hacku3.models.Question;
+import com.mateoj.hacku3.models.Video;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,9 +47,11 @@ public class QuestionActivity extends ActionBarActivity {
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     private TextView countDown;
+    private CountDownTimer countDownTimer;
     ProgressDialog progressDialog;
     MediaRecorder mMediaRecorder;
     private boolean isRecording = false;
+    private boolean isTimerRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +61,6 @@ public class QuestionActivity extends ActionBarActivity {
         cameraPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.videoPreview);
         preview.addView(cameraPreview);
-
-        mMediaRecorder = new MediaRecorder();
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("Loading...");
@@ -75,7 +76,21 @@ public class QuestionActivity extends ActionBarActivity {
             throw new IllegalStateException("The topic has not been set");
         }
 
+        countDownTimer = new CountDownTimer(15 * 1000, 1000) {
 
+            public void onTick(long millisUntilFinished) {
+                countDown.setText("" + millisUntilFinished / 1000);
+                if( millisUntilFinished / 1000 <= 5){
+                    countDown.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                }
+            }
+
+            public void onFinish() {
+                countDown.setText("Recording...");
+                isTimerRunning = false;
+                toggleRecording();
+            }
+        };
 //        mCamera = getCameraInstance();
 //        if( mCamera != null) {
 //            cameraPreview = new CameraPreview(this, mCamera);
@@ -86,7 +101,7 @@ public class QuestionActivity extends ActionBarActivity {
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startRecording();
+                toggleRecording();
             }
         });
 
@@ -137,7 +152,7 @@ public class QuestionActivity extends ActionBarActivity {
         }
         return cam;
     }
-    private void startRecording(){
+    private void toggleRecording(){
 //        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 //        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, .4);
 //        startActivityForResult(intent, CAPTURE_VIDEO_ACTIVITY_RESULT);
@@ -149,6 +164,7 @@ public class QuestionActivity extends ActionBarActivity {
             mCamera.lock();         // take camera access back from MediaRecorder
 
             // inform the user that recording has stopped
+            setCurrentQuestionIndex(++currentQuestionIndex);
             setCaptureButtonText("Capture");
             isRecording = false;
         } else {
@@ -156,10 +172,19 @@ public class QuestionActivity extends ActionBarActivity {
             if (prepareVideoRecorder()) {
                 // Camera is available and unlocked, MediaRecorder is prepared,
                 // now you can start recording
-                mMediaRecorder.setOutputFile(getOutputMediaFileUri(MEDIA_TYPE_VIDEO).toString());
+                Uri videoLocation = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
+                Video video = new Video();
+                video.setLocalUri(videoLocation);
+                video.setQuestionId(questionList.get(currentQuestionIndex).getId());
+                Assessment.getCurrentAssessment().addVideo(video);
+                Assessment.getCurrentAssessment().addQuestionAnswered(questionList.get(currentQuestionIndex));
+                mMediaRecorder.setOutputFile(videoLocation.toString());
                 mMediaRecorder.start();
 
                 // inform the user that recording has started
+                if( isTimerRunning)
+                    countDownTimer.onFinish();
+
                 setCaptureButtonText("Stop");
                 isRecording = true;
             } else {
@@ -216,20 +241,8 @@ public class QuestionActivity extends ActionBarActivity {
 
     private void setQuestion(Question question) {
         questionDescription.setText(question.getQuestion());
-        new CountDownTimer(15 * 1000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                countDown.setText("" + millisUntilFinished / 1000);
-                if( millisUntilFinished / 1000 <= 5){
-                    countDown.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                }
-            }
-
-            public void onFinish() {
-                countDown.setText("Recording...");
-                startRecording();
-            }
-        }.start();
+        isTimerRunning = true;
+        countDownTimer.start();
 
     }
 
@@ -260,10 +273,16 @@ public class QuestionActivity extends ActionBarActivity {
     }
 
     private void setCurrentQuestionIndex(int pos) {
-        currentQuestionIndex = pos;
-        setQuestion(questionList.get(pos));
+        if( pos < questionList.size()) {
+            currentQuestionIndex = pos;
+            setQuestion(questionList.get(pos));
+        } else {
+            endAssesment();
+        }
     }
-
+    private void endAssesment() {
+        startActivity(new Intent(this, AssessmentOverviewActivity.class));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -301,6 +320,7 @@ public class QuestionActivity extends ActionBarActivity {
 
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
+        mMediaRecorder = new MediaRecorder();
         mMediaRecorder.setCamera(mCamera);
 
         // Step 2: Set sources
@@ -333,6 +353,8 @@ public class QuestionActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if(isTimerRunning)
+            countDownTimer.cancel();
         releaseMediaRecorder();       // if you are using MediaRecorder, release it first
         releaseCamera();              // release the camera immediately on pause event
     }

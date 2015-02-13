@@ -4,6 +4,7 @@ import com.mateoj.hacku3.models.Question;
 import com.mateoj.hacku3.models.Topic;
 import com.mateoj.hacku3.models.Video;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,17 @@ public class Assessment {
 
     Topic topic;
 
+    public void addVideo(Video video) {
+        if( videos == null)
+            videos = new ArrayList<>();
+        videos.add(video);
+    }
 
+    public void addQuestionAnswered(Question question) {
+        if( questionsAnswered == null)
+            questionsAnswered = new ArrayList<>();
+        questionsAnswered.add(question);
+    }
     /**
      * Gets topic.
      *
