@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mateoj.hacku3.models.Topic;
 
@@ -74,9 +73,11 @@ public class MainActivity extends ActionBarActivity {
         }
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView name;
+            public TextView name2;
             public ViewHolder(View itemView) {
                 super(itemView);
                    name = (TextView) itemView.findViewById(R.id.categoryText);
+                   name2 = (TextView) itemView.findViewById(R.id.categoryText2);
             }
         }
 
@@ -144,6 +145,7 @@ public class MainActivity extends ActionBarActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
            Topic topic = items.get(position);
            holder.name.setText(topic.getName());
+            holder.name2.setText(topic.getName());
         }
 
         @Override
@@ -166,8 +168,11 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_settings)
-            Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
+        if(item.getItemId() == R.id.action_history) {
+            Assessment.getCurrentAssessment().setCurrentMode(Assessment.Mode.History);
+            startActivity(new Intent(this, AssessmentOverviewActivity.class));
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }

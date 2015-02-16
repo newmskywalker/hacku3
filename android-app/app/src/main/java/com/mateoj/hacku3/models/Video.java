@@ -8,6 +8,8 @@ import android.net.Uri;
 public class Video {
     private Uri localUri;
     private int questionId;
+    private String remoteUrl;
+
 
     /**
      * Sets new questionId.
@@ -43,5 +45,23 @@ public class Video {
      */
     public void setLocalUri(Uri localUri) {
         this.localUri = localUri;
+    }
+
+    /**
+     * Gets remoteUrl.
+     *
+     * @return Value of remoteUrl.
+     */
+    public String getRemoteUrl() {
+        return remoteUrl;
+    }
+
+    /**
+     * Sets new remoteUrl.
+     *
+     * @param remoteUrl New value of remoteUrl.
+     */
+    public void setRemoteUrl(String remoteUrl) {
+        this.remoteUrl = remoteUrl;
     }
 }

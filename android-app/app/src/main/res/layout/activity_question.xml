@@ -20,6 +20,10 @@
             android:id="@+id/questionDescription"
             android:layout_width="wrap_content"
             android:layout_weight="1"
+            android:shadowColor="@android:color/background_dark"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="1.2"
             android:textColor="@android:color/white"
             android:textAppearance="?android:textAppearanceLarge"
             android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -36,33 +40,43 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30dp"
+            android:textSize="60dp"
+            android:textColorHighlight="@color/white"
+            android:shadowColor="@android:color/background_dark"
+            android:shadowDx="1.2"
+            android:shadowDy="1.2"
+            android:shadowRadius="1.2"
             android:layout_gravity="bottom|left"
             android:id="@+id/countDown"
-            android:textColor="@android:color/holo_green_dark"/>
+            android:textColor="@android:color/white"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Record"
+            android:textColor="@android:color/white"
+            android:background="@color/theme_default_primary"
+            android:padding="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Done"
             android:layout_gravity="bottom|right"
-            android:textSize="20dp"
+            android:textSize="30dp"
             android:id="@+id/recordButton"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:id="@+id/readyInfo"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/theme_default_primary"
-            android:textSize="50dp"
-            android:text="READY?"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:background="@color/theme_default_primary"
+            android:padding="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:id="@+id/startButton"
             android:text="Start"/>
         </LinearLayout>

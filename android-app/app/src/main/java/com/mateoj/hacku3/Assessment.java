@@ -13,7 +13,8 @@ import java.util.List;
 public class Assessment {
     public enum Mode{
         Practice,
-        ForReals
+        ForReals,
+        History
     }
 
     private static Assessment currentAssessment;
@@ -33,6 +34,9 @@ public class Assessment {
     Mode currentMode;
 
     Topic topic;
+
+    int id;
+
 
     public void addVideo(Video video) {
         if( videos == null)
@@ -115,5 +119,23 @@ public class Assessment {
      */
     public Mode getCurrentMode() {
         return currentMode;
+    }
+
+    /**
+     * Gets id.
+     *
+     * @return Value of id.
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Sets new id.
+     *
+     * @param id New value of id.
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 }

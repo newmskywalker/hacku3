@@ -9,7 +9,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_alignParentTop="true"
-              android:elevation="20dp"
+              android:elevation="@dimen/abc_action_bar_default_height_material"
               android:id="@+id/topicSelection"
               android:padding="@dimen/activity_vertical_margin"
               android:layout_height="200dp">
@@ -19,7 +19,7 @@
         android:gravity="center"
         android:layout_margin="@dimen/activity_vertical_margin"
         tools:text="General Interview"
-        android:textAppearance="?android:textAppearanceMedium"
+        android:textAppearance="?android:textAppearanceSmall"
         android:layout_gravity="center"
         android:id="@+id/categoryText"/>
 </android.support.v7.widget.CardView>
@@ -27,6 +27,7 @@
     android:layout_width="match_parent"
     android:padding="@dimen/activity_vertical_margin"
     android:layout_height="200dp"
+    android:elevation="@dimen/abc_action_bar_default_height_material"
     android:id="@+id/modeSelection"
     android:layout_alignParentTop="true"
     android:visibility="gone">
@@ -35,13 +36,6 @@
         android:orientation="vertical"
         android:layout_gravity="center"
         android:layout_height="wrap_content">
-        <com.thedazzler.droidicon.badges.DroidiconBadge
-           android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            droidicon:db_icon_color="@color/twitter_blue"
-            droidicon:db_icon="fa-undo"
-            android:layout_gravity="right"
-            android:id="@+id/dismissModeSelection"/>
         <!--<ImageView-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
@@ -51,19 +45,54 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/practiceButton"
             android:gravity="center"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            tools:text="General Interview"
+            android:textSize="10sp"
+            android:layout_gravity="center"
+            android:id="@+id/categoryText2"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/practiceButton"
+            android:background="@color/theme_default_primary"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:textAppearance="?android:textAppearanceSmall"
             android:layout_gravity="center"
             android:text="Practice"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/assessmentButton"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:background="@color/theme_default_primary"
+
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:textAppearanceSmall"
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Assessment"/>
+        <com.thedazzler.droidicon.badges.DroidiconBadge
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            droidicon:db_size="20dp"
+            droidicon:db_icon_color="@color/twitter_blue"
+            droidicon:db_icon="fa-undo"
+            android:layout_gravity="center"
+            android:id="@+id/dismissModeSelection"/>
         </LinearLayout>
 
 </android.support.v7.widget.CardView>

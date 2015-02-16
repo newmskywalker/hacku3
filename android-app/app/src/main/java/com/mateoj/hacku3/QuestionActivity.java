@@ -72,6 +72,7 @@ public class QuestionActivity extends ActionBarActivity {
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
+        recordButton.setVisibility(View.INVISIBLE);
         if( Assessment.getCurrentAssessment().getTopic() == null) {
             throw new IllegalStateException("The topic has not been set");
         }
@@ -166,6 +167,7 @@ public class QuestionActivity extends ActionBarActivity {
             // inform the user that recording has stopped
             setCurrentQuestionIndex(++currentQuestionIndex);
             setCaptureButtonText("Capture");
+            recordButton.setVisibility(View.INVISIBLE);
             isRecording = false;
         } else {
             // initialize video camera
@@ -185,7 +187,8 @@ public class QuestionActivity extends ActionBarActivity {
                 if( isTimerRunning)
                     countDownTimer.onFinish();
 
-                setCaptureButtonText("Stop");
+                setCaptureButtonText("Done");
+                recordButton.setVisibility(View.VISIBLE);
                 isRecording = true;
             } else {
                 // prepare didn't work, release the camera

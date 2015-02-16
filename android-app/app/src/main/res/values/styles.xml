@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
     <resources>
-        <color name="theme_default_primary_light">#FF7043</color>
-        <color name="theme_default_primary">#FF5722</color>
-        <color name="theme_default_primary_dark">#E64A19</color>
-        <color name="theme_default_accent">#999999</color>
-        <color name="theme_default_accent_light">#cccccc</color>
-        <color name="theme_default_accent_dark">#666666</color>
-
+        <color name="theme_default_primary_light">#81D4FA</color>
+        <color name="theme_default_primary">#29B6F6</color>
+        <color name="theme_default_primary_dark">#039BE5</color>
+        <color name="theme_default_accent">#BDBDBD</color>
+        <color name="theme_default_accent_light">#E0E0E0</color>
+        <color name="theme_default_accent_dark">#757575</color>
         <color name="theme_background">#f2f2f2</color>
 
         <declare-styleable name="DWSAppTheme">
@@ -22,8 +21,20 @@
             <item name="colorControlActivated">@color/theme_default_accent_light</item>
             <item name="actionBarIconColor">#fff</item>
         </style>
-
-
+         <style name="Theme.TranslucentActionBar" parent="@style/AppTheme">
+            <item name="actionBarStyle">@style/Widget.ActionBar</item>
+         </style>
+        <style name="Theme.TranslucentActionBar.ActionBar" />
+        <style name="Theme.TranslucentActionBar.ActionBar.Overlay">
+            <item name="actionBarStyle">@style/Widget.ActionBar.Transparent</item>
+            <item name="windowActionBarOverlay">true</item>
+        </style>
+        <style name="Widget.ActionBar.Transparent">
+            <item name="background">@android:color/transparent</item>
+        </style>
+        <style name="Widget.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+            <item name="background">@color/theme_default_primary</item>
+        </style>
         <style name="MainTheme" parent="AppTheme">
             <item name="actionBarTheme">@style/MainActionBarThemeOverlay</item>
             <item name="actionBarStyle">@style/MainActionBar</item>
